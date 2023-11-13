@@ -144,7 +144,7 @@ public:
             return MinTableSize;
 
         // Round up to next power of two.
-        return std::size_t(1) << (int(sizeof(cap) * CHAR_BIT) - __builtin_clzll(cap - 1));
+        return std::size_t(1) << (int(sizeof(cap) * CHAR_BIT) - builtin_clzll(cap - 1));
     }
 
     template <typename ResourcePtr, typename Callback = void (*)(entry_handle, std::size_t)>
@@ -204,11 +204,13 @@ public:
     {
         struct iterator : _detail::forward_iterator_base<iterator, entry_handle, entry_handle, void>
         {
-            hash_table* _self;
-            value_type* _cur;
+            hash_table*             _self;
+            hash_table::value_type* _cur;
 
             iterator() : _self(nullptr), _cur(nullptr) {}
-            explicit iterator(hash_table& self, value_type* cur) : _self(&self), _cur(cur) {}
+            explicit iterator(hash_table& self, hash_table::value_type* cur)
+            : _self(&self), _cur(cur)
+            {}
 
             entry_handle deref() const
             {
@@ -263,4 +265,3 @@ private:
 } // namespace dryad::_detail
 
 #endif // DRYAD_DETAIL_HASH_TABLE_HPP_INCLUDED
-

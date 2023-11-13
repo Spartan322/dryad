@@ -23,6 +23,13 @@ struct forward_iterator_tag;
 struct bidirectional_iterator_tag;
 _LIBCPP_END_NAMESPACE_STD
 
+#elif defined(_MSC_VER)
+
+_STD_BEGIN
+struct forward_iterator_tag;
+struct bidirectional_iterator_tag;
+_STD_END
+
 #else
 
 // Forward declaring things in std is not allowed, but I'm willing to take the risk.
@@ -36,4 +43,3 @@ struct bidirectional_iterator_tag;
 #endif
 
 #endif // DRYAD_DETAIL_STD_HPP_INCLUDED
-

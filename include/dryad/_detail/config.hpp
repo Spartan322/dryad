@@ -56,6 +56,8 @@ struct priority_tag : priority_tag<Priority - 1>
 #    if defined(__has_cpp_attribute)
 #        if __has_cpp_attribute(gnu::always_inline)
 #            define DRYAD_FORCE_INLINE [[gnu::always_inline]]
+#        elif defined(_MSC_VER)
+#            define DRYAD_FORCE_INLINE __forceinline
 #        endif
 #    endif
 #
@@ -68,7 +70,7 @@ struct priority_tag : priority_tag<Priority - 1>
 #ifndef DRYAD_EMPTY_MEMBER
 
 #    if defined(__has_cpp_attribute)
-#        if __has_cpp_attribute(no_unique_address)
+#        if __has_cpp_attribute(no_unique_address) || __has_cpp_attribute(msvc::no_unique_address)
 #            define DRYAD_HAS_EMPTY_MEMBER 1
 #        endif
 #    endif
@@ -77,12 +79,33 @@ struct priority_tag : priority_tag<Priority - 1>
 #    endif
 
 #    if DRYAD_HAS_EMPTY_MEMBER
-#        define DRYAD_EMPTY_MEMBER [[no_unique_address]]
+#        if __has_cpp_attribute(msvc::no_unique_address)
+#            define DRYAD_EMPTY_MEMBER                                                             \
+                _Pragma("warning(push)") _Pragma("warning(disable : 4848)")                        \
+                    [[msvc::no_unique_address]] _Pragma("warning(pop)")
+#        else
+#            define DRYAD_EMPTY_MEMBER [[no_unique_address]]
+#        endif
 #    else
 #        define DRYAD_EMPTY_MEMBER
 #    endif
 
 #endif
 
-#endif // DRYAD_DETAIL_CONFIG_HPP_INCLUDED
+#ifdef _MSC_VER
+#    include <intrin.h>
+#    pragma warning(push)
+#    pragma warning(disable : 4244)
+DRYAD_FORCE_INLINE int builtin_clzll(unsigned long long x)
+{
+    return __lzcnt64(x);
+}
+#    pragma warning(pop)
+#else
+DRYAD_FORCE_INLINE inline int builtin_clzll(unsigned long long x)
+{
+    return __builtin_clzll(x);
+}
+#endif
 
+#endif // DRYAD_DETAIL_CONFIG_HPP_INCLUDED
