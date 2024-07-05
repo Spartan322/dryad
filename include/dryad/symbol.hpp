@@ -121,7 +121,7 @@ struct symbol_index_hash_traits
     bool is_equal(IndexType entry, string_view str) const
     {
         auto existing_str = buffer->c_str(entry);
-        return std::strncmp(existing_str, str.ptr, str.length) == 0;
+        return std::strncmp(existing_str, str.ptr, str.length) == 0 && *(existing_str + str.length) == CharT(0);
     }
 
     std::size_t hash(IndexType entry) const
