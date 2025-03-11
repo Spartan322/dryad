@@ -1021,13 +1021,13 @@ template <typename NodeKind, typename... Lambdas>
 auto visit_node_all(node<NodeKind>* node, Lambdas&&... lambdas)
 {
     using node_types = _detail::node_types_for_lambdas<std::decay_t<Lambdas>...>;
-    return _visit_node_all<node_types, Lambdas...>::template visit(node, DRYAD_FWD(lambdas)...);
+    return _visit_node_all<node_types, Lambdas...>::visit(node, DRYAD_FWD(lambdas)...);
 }
 template <typename NodeKind, typename... Lambdas>
 auto visit_node_all(const node<NodeKind>* node, Lambdas&&... lambdas)
 {
     using node_types = _detail::node_types_for_lambdas<std::decay_t<Lambdas>...>;
-    return _visit_node_all<node_types, Lambdas...>::template visit(node, DRYAD_FWD(lambdas)...);
+    return _visit_node_all<node_types, Lambdas...>::visit(node, DRYAD_FWD(lambdas)...);
 }
 } // namespace dryad
 
